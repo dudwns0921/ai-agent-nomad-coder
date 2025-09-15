@@ -59,3 +59,11 @@
     - 필수 요소
       - Description
       - Expected Output
+    - context
+      - 특정 task에서 이전 task의 결과값을 참조할 때 사용
+
+### Pydantic
+
+- Python 데이터 검증 및 설정 관리 라이브러리로, 타입 힌트를 활용해 데이터를 쉽게 검증하고 직렬화/역직렬화할 수 있게 해줌
+
+- https://docs.pydantic.dev/latest/

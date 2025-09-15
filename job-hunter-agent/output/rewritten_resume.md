@@ -1,0 +1,1 @@
+Please share your existing resume so I can rewrite and optimize it to align perfectly with the Junior Frontend Developer position at TechWave Inc.

@@ -1,0 +1,74 @@
+Basic Information
+Name: Youngjun Jung
+Gender/Birth: Male, Born in 1995 (29 years old)
+Email: dud*******@gmail.com
+Address: Gwangjin-gu, Seoul
+Profile
+I am a results-driven developer, Youngjun Jung.
+I have developed in-vehicle AI services and infotainment systems in collaboration with global mobility companies such as Hyundai Mobis, TOYOTA, and KGM.
+I focus on improving productivity and automation by applying AI technology to real-world projects, and I have led teams to success as both a leader and a team player.
+
+Successfully led a LangChain-based in-vehicle AI service project
+Awarded Best Project in the final project of the goorm AI Bootcamp
+Promoted a culture of collaboration, documentation, and code review using Jira, Confluence, and Github PRs
+Actively adopted automation and quality management tools such as ESLint, Prettier, and Jenkins
+Experienced in smooth communication and collaboration with various roles
+Experience
+Obigo (Mar 2022 – Present, 3 years 7 months)
+In-vehicle AI Service Development
+Developed AI services using LLM and LangChain
+In-vehicle Infotainment Frontend Development
+Developed web apps using Vue.js and TypeScript
+Integrated AF API and developed vehicle system integration features
+Team Leadership & Automation
+Led code reviews, linting/formatting, Jenkins-based automation, and documentation
+Major Projects
+TOYOTA Vehicle Management Mobile App Development (Nov 2024 – Present)
+
+Designed hybrid app architecture and developed frontend
+Implemented centralized error handling, responsive UI, and native I/F
+Solved Nginx caching issues and established unit test environment
+Achieved Outstanding grade in 2024 H2 performance evaluation
+Hyundai Mobis GENESIS In-Vehicle AI Service Development (May 2024 – Jan 2025)
+
+Implemented LangChain-based AI response objectification and processing logic
+Built RAG-based personalized response system, socket communication, and DevOps automation
+Toyota/KGM In-Vehicle Infotainment Service Development (Jun 2023 – Present)
+
+Developed hybrid app with WebView, WebAPI, and server integration
+Improved code quality, established test environment, and optimized release process
+Education
+Korea National Open University (Computer Science, Mar 2023 – Aug 2025, Transfer/Expected Graduation)
+GPA: 3.8/4.5
+
+Korea University (Sejong) (Archaeology and Art History, Mar 2014 – Aug 2020, Graduated)
+GPA: 3.58/4.5
+
+Skills
+Frontend: JavaScript, TypeScript, Vue.js, ReactJS, jQuery, Tanstack Query, Hybrid Apps
+Backend: Node.js, RestAPI, FastAPI, Python, Java
+AI/ML: LangChain, Langgraph, Keras, TensorFlow, Jupyter, RAG, ChatGPT API
+DevOps: Docker, Jenkins, Github Actions, Oracle Cloud, CI/CD
+DB: SQLite, PostgreSQL
+Collaboration/Documentation: Jira, Confluence, Notion, Slack, Git, Github
+Education & Activities
+Goorm AI Bootcamp (May 2025 – Jul 2025)
+
+AI development with Python and Jupyter, Keras/TensorFlow, LangChain, RAG
+Final Project "Greetify" (Best Project Award): Face image analysis and personalized greeting service
+Deployment | GitHub
+Side Project – AutoIconic (Apr 2025 – Present)
+
+VS Code extension, LLM-based SVG icon generation
+React, TypeScript, Node.js, Oracle Cloud
+Side Project – Guru (Jul 2025 – Aug 2025)
+
+LLM-based personalized lecture recommendation service
+React, NestJS, Python, LangChain, FastAPI
+Deployment | GitHub
+Samsung Multicampus (Sep 2021 – Dec 2021)
+
+Web Service Developer Bootcamp (Java), selected as an outstanding non-major employment case
+Gangnam IT Academy (Aug 2021 – Sep 2021)
+
+SQLD Certification Course
