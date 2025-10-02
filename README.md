@@ -65,5 +65,61 @@
 ### Pydantic
 
 - Python 데이터 검증 및 설정 관리 라이브러리로, 타입 힌트를 활용해 데이터를 쉽게 검증하고 직렬화/역직렬화할 수 있게 해줌
+  - https://docs.pydantic.dev/latest/
 
-- https://docs.pydantic.dev/latest/
+## CREWAI: CONTENT PIPELINE AGENT
+### Crew
+#### Flow
+- 복잡한 워크플로우를 구조화하고 제어하는 CrewAI의 고급 기능
+- 여러 단계의 작업을 순차적, 병렬적, 조건부로 연결하여 실행 흐름을 정의할 수 있음
+
+- 주요 데코레이터
+  - `@start()`
+    - Flow의 시작점을 정의
+    - Flow가 실행될 때 가장 먼저 호출되는 메서드
+  
+  - `@listen()`
+    - 특정 메서드나 이벤트의 완료를 감지하여 실행
+    - 이전 단계의 출력을 입력으로 받을 수 있음
+    - 단일 메서드 또는 논리 연산자와 함께 사용 가능
+  
+  - `@router()`
+    - 조건에 따라 다음 실행 경로를 결정
+    - 반환값(문자열)에 따라 분기 처리
+    - if-else 로직으로 동적 워크플로우 구현
+  
+  - 논리 연산자
+    - `and_()`: 모든 지정된 단계가 완료되면 실행
+    - `or_()`: 지정된 단계 중 하나라도 완료되면 실행
+
+- 주요 메서드
+  - `flow.kickoff()`
+    - Flow 실행 시작
+  
+  - `flow.plot()`
+    - Flow의 실행 구조를 시각화
+#### Flow State
+- Flow 내에서 여러 메서드 간 데이터를 공유하고 전달하기 위한 상태 관리 시스템
+- Pydantic의 BaseModel을 상속받아 타입 안정성을 보장하는 상태 클래스를 정의
+
+- 주요 특징
+  - Flow 클래스에 제네릭 타입으로 State 클래스를 지정: `Flow[StateClass]`
+  - Pydantic BaseModel을 활용하여 상태 구조와 기본값 정의
+  - 딕셔너리 방식으로 접근: `self.state["key"]`
+  - Flow의 전체 실행 과정에서 데이터 일관성 유지
+
+#### CrewAI와 Pydantic 연동 시 주의사항
+- **문제**: CrewAI는 `crew.kickoff(inputs={})`에서 Pydantic 객체를 직접 받을 수 없음
+- **원인**: CrewAI 입력 제약 - `str`, `int`, `float`, `bool`, `dict`, `list`만 허용
+- **해결방법**:
+  ```python
+  # ❌ 에러 발생
+  inputs={"blog_post": self.state.blog_post}  # BlogPost 객체
+  
+  # ✅ 올바른 방법  
+  inputs={"blog_post": self.state.blog_post.model_dump()}  # 딕셔너리로 변환
+  ```
+- **핵심 포인트**:
+  - `model_dump()`: Pydantic 객체 → Python 딕셔너리 변환
+  - CrewAI 호환성을 위한 필수 처리 과정
+  - 모든 Pydantic 모델 전달 시 적용 필요
