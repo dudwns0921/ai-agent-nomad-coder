@@ -123,3 +123,23 @@
   - `model_dump()`: Pydantic 객체 → Python 딕셔너리 변환
   - CrewAI 호환성을 위한 필수 처리 과정
   - 모든 Pydantic 모델 전달 시 적용 필요
+
+## AUTOGEN: GROK DEEP RESEARCH AGENT
+- 주요 특징
+  - Microsoft에서 만듦
+  - AI AGENT계의 할아버지같은 프레임워크
+  - AI AGENT를 활용한 복잡한 기능을 만들기 위해서는 별도의 Core 패키지를 깊게 학습하고 다뤄야 한다는 단점
+  - Langgraph는 그 자체가 Core로, 간단한 개념 몇 가지만 익히면 복잡한 기능을 구현할 수 있음
+  - 니콜라스가 보기에는 AI AGENT 프레임워크 경쟁에서는 살아남지 못할 거 같음
+### AgentChat
+- agent들의 그룹챗을 만들 수 있는 프레임워크
+- 여러 agent들의 집합을 team이라고 하고, Microsoft에서는 여러 team preset을 지원
+- Team preset
+  - RoundRobinGroupChat
+    - 라운드 로빈 방식으로 참가자들이 교대로 그룹 채팅을 운영하는 팀
+    - 라운드 로빈 스케줄링은 시분할 시스템을 위해 설계된 선점형 스케줄링의 하나로서, 프로세스들 사이에 우선순위를 두지 않고, 순서대로 시간단위로 CPU를 할당하는 방식의 CPU 스케줄링 알고리즘
+    - 모든 Agent들이 순서대로 대화를 이어나가는 형식이라고 보면 됨
+  - SelectorGroupChat
+    - 각 메시지 이후 ChatCompletion 모델을 사용하여 다음 발표자를 선택하는 팀
+    - 라운드 로빈 그룹챗에서는 각 Agent들이 순서대로 대화를 이어가지만, SelectorGroupChat에서는 누가 말할지를 AI가 대화 히스토리 등을 참고 후 결정해 발언권을 넘기는 방식
+
