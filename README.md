@@ -143,3 +143,153 @@
     - 각 메시지 이후 ChatCompletion 모델을 사용하여 다음 발표자를 선택하는 팀
     - 라운드 로빈 그룹챗에서는 각 Agent들이 순서대로 대화를 이어가지만, SelectorGroupChat에서는 누가 말할지를 AI가 대화 히스토리 등을 참고 후 결정해 발언권을 넘기는 방식
 
+## Introducing OpenAI Agents SDK
+
+## 프레임워크 특징
+
+### 장점
+- **경량성**: 매우 가볍고 간단한 구조
+- **낮은 학습 곡선**: 배워야 할 개념이 적음
+- **낮은 추상화 레벨**: 직접적인 제어 가능 (레고 블럭을 직접 조립)
+- **빌트인 트레이싱**: 에이전트 툴 호출 과정 전체 확인 가능
+
+### 단점
+- **통합성 부족**: 다른 모델 사용 시 통합이 원활하지 않음
+- **수동 작업 필요**: 추상화가 적어 직접 구현해야 하는 부분이 많음
+
+### 관련 도구
+- **Streamlit**: 파이썬으로 UI를 쉽게 만들 수 있는 도구
+
+---
+
+## OpenAI SDK 스트리밍 이벤트 체계
+
+### 1. `raw_response_event` (원본 응답 이벤트)
+
+#### `response.output_text.delta`
+- **기능**: 텍스트 응답의 증분 업데이트
+- **데이터**: `event.data.delta` (새로 생성된 텍스트 조각)
+- **용도**: 실시간 텍스트 출력
+
+#### `response.function_call_arguments.delta`
+- **기능**: 함수 호출 인자의 증분 업데이트
+- **데이터**: `event.data.delta` (함수 인자 JSON 일부)
+- **용도**: 함수 호출 인자 생성 과정 추적
+
+#### `response.completed`
+- **기능**: 응답 완료 신호
+- **용도**: 현재 응답 종료 알림
+
+---
+
+### 2. `agent_updated_stream_event` (에이전트 업데이트)
+- **기능**: 에이전트 전환 이벤트
+- **데이터**: `event.new_agent.name` (새 에이전트 이름)
+- **용도**: 멀티 에이전트 시스템에서 에이전트 전환 추적
+
+---
+
+### 3. `run_item_stream_event` (실행 아이템 이벤트)
+
+#### `tool_call_item`
+- **기능**: 도구 호출 정보
+- **데이터**: `event.item.raw_item.to_dict()` (도구 호출 상세)
+- **용도**: 호출된 도구 확인
+
+#### `tool_call_output_item`
+- **기능**: 도구 실행 결과
+- **데이터**: `event.item.output` (실행 결과값)
+- **용도**: 도구 실행 결과 추적
+
+#### `message_output_item`
+- **기능**: 최종 메시지 출력
+- **데이터**: `ItemHelpers.text_message_output(event.item)`
+- **용도**: 완성된 메시지 출력
+
+---
+
+### 이벤트 처리 패턴
+
+#### 기본 이벤트 루프
+```python
+async for event in stream.stream_events():
+    if event.type == "raw_response_event":
+        # 원본 이벤트 처리
+    elif event.type == "agent_updated_stream_event":
+        # 에이전트 업데이트 처리
+    elif event.type == "run_item_stream_event":
+        # 실행 아이템 처리
+```
+
+#### 실시간 델타 스트리밍
+```python
+message = ""
+args = ""
+
+async for event in stream.stream_events():
+    if event.type == "raw_response_event":
+        if event.data.type == "response.output_text.delta":
+            message += event.data.delta
+            print(message)
+        
+        elif event.data.type == "response.function_call_arguments.delta":
+            args += event.data.delta
+            print(args)
+        
+        elif event.data.type == "response.completed":
+            message = ""
+            args = ""
+```
+
+---
+
+### 이벤트 발생 흐름
+
+#### 함수 호출 시퀀스
+1. `response.function_call_arguments.delta` (여러 번 반복)
+2. `tool_call_item`
+3. `tool_call_output_item`
+
+#### 텍스트 응답 시퀀스
+1. `response.output_text.delta` (여러 번 반복)
+2. `message_output_item`
+
+#### 완료 시퀀스
+- `response.completed`
+
+### Memory
+#### SQLiteSession 클래스
+- 메모리 구현 지원
+- 인자
+  - 유저 id
+  - db 파일 저장 경로
+- 특징
+  - 유저별 데이터 관리 가능
+  - 지정된 경로에 DB 파일 자동 생성
+    - vsc의 SQLite Viewer로 데이터 확인 가능
+  - 커스텀 세션 클래스 구현 가능
+
+### handoffs (핸즈오프)
+- 에이전트가 위임할 수 있는 서브 에이전트
+- 핸즈오프 목록을 제공하면, 상황에 맞게 에이전트가 해당 서브 에이전트로 작업을 위임할 수 있음
+- 책임 분리(separation of concerns)와 모듈화(modularity) 가능 — 역할 분담 및 구조화에 유리
+- 선택적 위임으로 시스템 유연성 향상
+
+### graphviz
+- **기능**: 에이전트 실행 구조를 그래프로 시각화
+- **요구사항**:
+  - Python 패키지: `graphviz`
+  - 시스템 레벨 설치도 필요
+
+### trace
+- **기능**: OpenAI Platform에서 에이전트 실행 로그 확인
+- **제공**: OpenAI SDK 기본 기능
+- **사용법**:
+  ```python
+  with trace("user_1"):
+      # 블록 내 실행 로그에 "user_1" 라벨 자동 부여
+  ```
+
+### streamlit
+- streamlit 코드는 유저 인터렉션 시 위에서 아래로 실행. 리렌더링 개념과 같음
+- 데이터를 지속시키기 위해서는 st.session_state에 저장해야 함
